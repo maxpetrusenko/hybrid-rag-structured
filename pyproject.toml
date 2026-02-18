@@ -25,6 +25,11 @@ dev = [
     "mypy>=1.0.0",
 ]
 
+[project.scripts]
+hybrid-rag-ingest = "src.ingestion.ingest:ingest_cli"
+hybrid-rag-query = "src.retrieval.query:query_command"
+hybrid-rag-eval = "src.evaluation.eval_command:eval_command"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
