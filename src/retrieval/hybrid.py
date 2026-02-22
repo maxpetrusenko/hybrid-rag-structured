@@ -6,8 +6,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
-from pgvector.sqlalchemy import cos_dist
+from sqlalchemy import select, func, text
 
 from ..storage.models import ChunkTable
 from ..ingestion.bm25_index import BM25Index, BM25Result
@@ -64,14 +63,15 @@ class DenseRetriever:
 
         Returns dict of chunk_id -> similarity score (0-1, higher is better).
         """
-        # Use cosine distance (pgvector)
+        # Use cosine distance via <=> operator (pgvector)
+        # Distance is 0-2, so similarity = 1 - distance/2
         stmt = (
             select(
                 ChunkTable.id,
-                1 - cos_dist(ChunkTable.embedding, query_embedding).label("score")
+                (1 - ChunkTable.embedding.cosine_distance(query_embedding)).label("score")
             )
             .where(ChunkTable.embedding.isnot(None))
-            .order_by(cos_dist(ChunkTable.embedding, query_embedding))
+            .order_by(ChunkTable.embedding.cosine_distance(query_embedding))
             .limit(limit)
         )
 

@@ -41,6 +41,7 @@ class AggregateMetrics:
 | Recall@10 | {self.recall_at_10:.3f} |
 | MRR | {self.mrr:.3f} |
 | nDCG@10 | {self.ndcg_at_10:.3f} |
+"""
 
 
 class RecallAtK:

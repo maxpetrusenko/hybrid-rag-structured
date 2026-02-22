@@ -21,7 +21,7 @@ class DocumentTable(Base):
     id = Column(String, primary_key=True)
     source_uri = Column(String, nullable=False, index=True)
     title = Column(String)
-    metadata = Column(JSON)
+    doc_metadata = Column("metadata", JSON)  # Map to 'metadata' column in DB
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     chunks = relationship("ChunkTable", back_populates="document", cascade="all, delete-orphan")
@@ -36,7 +36,7 @@ class ChunkTable(Base):
     chunk_index = Column(Integer, nullable=False)
     content = Column(Text, nullable=False)
     embedding = Column(Vector(1536), nullable=True)  # OpenAI text-embedding-3-small
-    metadata = Column(JSON)
+    chunk_metadata = Column("metadata", JSON)  # Map to 'metadata' column in DB
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     document = relationship("DocumentTable", back_populates="chunks")

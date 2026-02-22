@@ -3,7 +3,7 @@
 import os
 from typing import AsyncGenerator, Optional
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy import text
+from sqlalchemy import text, create_engine
 from sqlalchemy.orm import sessionmaker
 from .models import Base
 

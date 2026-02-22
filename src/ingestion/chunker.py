@@ -80,7 +80,7 @@ class MarkdownChunker(Chunker):
             heading_match = self.HEADING_PATTERN.match(line)
 
             if heading_match and current_size > 0:
-                # Start new chunk at heading
+                # Start new chunk at heading (use current_heading for content before this heading)
                 chunks.append(Chunk(
                     content='\n'.join(current_chunk),
                     index=chunk_index,
@@ -90,6 +90,11 @@ class MarkdownChunker(Chunker):
                 current_size = line_size
                 current_heading = heading_match.group(2)
                 chunk_index += 1
+            elif heading_match:
+                # First heading - just track it
+                current_heading = heading_match.group(2)
+                current_chunk.append(line)
+                current_size += line_size
             elif current_size + line_size > self.chunk_size and current_chunk:
                 # Chunk is full, start new one
                 chunks.append(Chunk(

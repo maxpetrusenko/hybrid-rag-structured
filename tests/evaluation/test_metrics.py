@@ -85,4 +85,4 @@ def test_compute_metrics():
 
     # doc2 is at position 2
     assert metrics["mrr"] == 0.5
-    assert metrics["recall_at_5"] == 0.5  # 2 of 4 relevant in top 5
+    assert metrics["recall_at_5"] == 1.0  # 2 of 2 relevant in top 5
