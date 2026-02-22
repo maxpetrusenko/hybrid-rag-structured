@@ -4,6 +4,14 @@
 
 Hybrid RAG combining semantic (dense) + structured (sparse) retrieval over Postgres + pgvector. **With evaluated retrieval quality.**
 
+## Features
+
+- **Dense Retrieval**: Vector similarity search with OpenAI embeddings
+- **Sparse Retrieval**: BM25 keyword matching with Tantivy
+- **Hybrid Fusion**: Weighted score combination for best of both worlds
+- **Standard IR Metrics**: Recall@K, MRR, nDCG evaluation
+- **Test Coverage**: 457 lines of tests (36% test ratio)
+
 ## Why Hybrid?
 
 | Method | Strength | Weakness |
