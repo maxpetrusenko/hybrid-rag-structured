@@ -1,6 +1,6 @@
 """Retrieval evaluation: Recall@K, MRR, nDCG."""
 
-from .metrics import RecallAtK, MRR, NDCG, EvaluationResult
 from .evaluator import Evaluator, RetrievalEval
+from .metrics import MRR, NDCG, EvaluationResult, RecallAtK
 
 __all__ = ["RecallAtK", "MRR", "NDCG", "EvaluationResult", "Evaluator", "RetrievalEval"]

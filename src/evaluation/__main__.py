@@ -1,8 +1,8 @@
 """Evaluation CLI."""
 
 import asyncio
+
 import click
-from pathlib import Path
 from dotenv import load_dotenv
 
 from .evaluator import RetrievalEval

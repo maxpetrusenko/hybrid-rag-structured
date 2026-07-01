@@ -3,14 +3,14 @@
 import asyncio
 import uuid
 from pathlib import Path
-from typing import List
+
 import click
 
-from ..storage.database import Database, get_db
-from ..storage.models import DocumentTable, ChunkTable
-from .chunker import MarkdownChunker, read_documents, Chunk
-from .embeddings import EmbeddingService
+from ..storage.database import Database
+from ..storage.models import ChunkTable, DocumentTable
 from .bm25_index import BM25Index
+from .chunker import MarkdownChunker, read_documents
+from .embeddings import EmbeddingService
 
 
 class IngestionPipeline:

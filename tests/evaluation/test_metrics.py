@@ -1,9 +1,6 @@
 """Tests for evaluation metrics."""
 
-import pytest
-from src.evaluation.metrics import (
-    RecallAtK, MRR, NDCG, compute_metrics, AggregateMetrics
-)
+from src.evaluation.metrics import MRR, NDCG, RecallAtK, compute_metrics
 
 
 def test_recall_at_k_perfect():

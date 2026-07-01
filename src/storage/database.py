@@ -1,10 +1,11 @@
 """Database connection and utilities."""
 
 import os
-from typing import AsyncGenerator, Optional
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy import text, create_engine
-from sqlalchemy.orm import sessionmaker
+from collections.abc import AsyncGenerator
+
+from sqlalchemy import create_engine, text
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
 from .models import Base
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://hybridrag:hybridrag@localhost:5432/hybridrag")

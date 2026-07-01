@@ -1,7 +1,7 @@
 """Embedding service using OpenAI API."""
 
 import os
-from typing import List
+
 import numpy as np
 from openai import AsyncOpenAI
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -23,7 +23,7 @@ class EmbeddingService:
         self.batch_size = batch_size
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10))
-    async def embed(self, texts: List[str]) -> List[List[float]]:
+    async def embed(self, texts: list[str]) -> list[list[float]]:
         """Embed a batch of texts."""
         if not texts:
             return []
@@ -41,12 +41,12 @@ class EmbeddingService:
 
         return all_embeddings
 
-    async def embed_single(self, text: str) -> List[float]:
+    async def embed_single(self, text: str) -> list[float]:
         """Embed a single text."""
         result = await self.embed([text])
         return result[0] if result else []
 
-    def normalize(self, embeddings: List[List[float]]) -> List[List[float]]:
+    def normalize(self, embeddings: list[list[float]]) -> list[list[float]]:
         """L2 normalize embeddings for cosine similarity."""
         arr = np.array(embeddings)
         norms = np.linalg.norm(arr, axis=1, keepdims=True)

@@ -1,15 +1,13 @@
 """Hybrid retrieval combining dense (vector) and sparse (BM25) scores."""
 
 import os
-from typing import List, Dict
 from dataclasses import dataclass
-import numpy as np
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, text
 
+from ..ingestion.bm25_index import BM25Index
 from ..storage.models import ChunkTable
-from ..ingestion.bm25_index import BM25Index, BM25Result
 
 
 @dataclass
@@ -56,9 +54,9 @@ class DenseRetriever:
 
     async def retrieve(
         self,
-        query_embedding: List[float],
+        query_embedding: list[float],
         limit: int = 20,
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """Retrieve chunks by vector similarity.
 
         Returns dict of chunk_id -> similarity score (0-1, higher is better).
@@ -86,7 +84,7 @@ class SparseRetriever:
     def __init__(self, bm25_index: BM25Index):
         self.index = bm25_index
 
-    def retrieve(self, query: str, limit: int = 20) -> Dict[str, float]:
+    def retrieve(self, query: str, limit: int = 20) -> dict[str, float]:
         """Retrieve chunks by BM25 scoring.
 
         Returns dict of chunk_id -> BM25 score.
@@ -112,8 +110,8 @@ class HybridRetriever:
     async def retrieve(
         self,
         query: str,
-        query_embedding: List[float],
-    ) -> List[RetrievedChunk]:
+        query_embedding: list[float],
+    ) -> list[RetrievedChunk]:
         """Retrieve and fuse results from dense and sparse retrievers.
 
         Uses score normalization and weighted fusion.
@@ -149,7 +147,7 @@ class HybridRetriever:
 
         return results[:self.config.rerank_top_k]
 
-    def _normalize_scores(self, scores: Dict[str, float]) -> Dict[str, float]:
+    def _normalize_scores(self, scores: dict[str, float]) -> dict[str, float]:
         """Min-max normalize scores to 0-1 range."""
         if not scores:
             return {}
@@ -168,9 +166,9 @@ class HybridRetriever:
 
     def _fuse_scores(
         self,
-        dense: Dict[str, float],
-        sparse: Dict[str, float],
-    ) -> Dict[str, float]:
+        dense: dict[str, float],
+        sparse: dict[str, float],
+    ) -> dict[str, float]:
         """Weighted fusion of dense and sparse scores."""
         all_ids = set(dense.keys()) | set(sparse.keys())
 
@@ -186,7 +184,7 @@ class HybridRetriever:
 
         return fused
 
-    async def _fetch_chunks(self, chunk_ids: List[str]) -> List[RetrievedChunk]:
+    async def _fetch_chunks(self, chunk_ids: list[str]) -> list[RetrievedChunk]:
         """Fetch full chunk details from database."""
         if not chunk_ids:
             return []

@@ -1,10 +1,9 @@
 """BM25 sparse retrieval index using Tantivy."""
 
-import os
-from typing import List, Dict, Tuple
-from pathlib import Path
-import tantivy
 from dataclasses import dataclass
+from pathlib import Path
+
+import tantivy
 
 
 @dataclass
@@ -51,7 +50,7 @@ class BM25Index:
             self.create_index()
             self.index.searcher()
 
-    def add_chunks(self, chunks: List[Tuple[str, str, str, int]]) -> None:
+    def add_chunks(self, chunks: list[tuple[str, str, str, int]]) -> None:
         """Add chunks to the index.
 
         Args:
@@ -82,7 +81,7 @@ class BM25Index:
         limit: int = 20,
        _bm25_b: float = 0.75,
         _bm25_k1: float = 1.2,
-    ) -> List[BM25Result]:
+    ) -> list[BM25Result]:
         """Search the BM25 index."""
         if not self.searcher:
             return []

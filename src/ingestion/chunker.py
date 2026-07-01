@@ -1,7 +1,6 @@
 """Text chunking strategies."""
 
 import re
-from typing import List, Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -21,7 +20,7 @@ class Chunker:
         self.chunk_size = chunk_size
         self.overlap = overlap
 
-    def chunk(self, text: str, metadata: dict | None = None) -> List[Chunk]:
+    def chunk(self, text: str, metadata: dict | None = None) -> list[Chunk]:
         """Split text into chunks."""
         raise NotImplementedError
 
@@ -29,7 +28,7 @@ class Chunker:
 class TextChunker(Chunker):
     """Simple text chunker by character count."""
 
-    def chunk(self, text: str, metadata: dict | None = None) -> List[Chunk]:
+    def chunk(self, text: str, metadata: dict | None = None) -> list[Chunk]:
         """Split text into overlapping chunks."""
         if not text:
             return []
@@ -60,7 +59,7 @@ class MarkdownChunker(Chunker):
     HEADING_PATTERN = re.compile(r'^(#{1,6})\s+(.+)$', re.MULTILINE)
     CODE_BLOCK_PATTERN = re.compile(r'```[\s\S]*?```')
 
-    def chunk(self, text: str, metadata: dict | None = None) -> List[Chunk]:
+    def chunk(self, text: str, metadata: dict | None = None) -> list[Chunk]:
         """Split markdown by headings while respecting code blocks."""
         if not text:
             return []
@@ -105,7 +104,7 @@ class MarkdownChunker(Chunker):
                 # Overlap: keep last few sentences/lines
                 overlap_lines = self._get_overlap(current_chunk)
                 current_chunk = overlap_lines + [line]
-                current_size = sum(len(l) + 1 for l in current_chunk)
+                current_size = sum(len(chunk_line) + 1 for chunk_line in current_chunk)
                 chunk_index += 1
             else:
                 current_chunk.append(line)
@@ -121,7 +120,7 @@ class MarkdownChunker(Chunker):
 
         return chunks
 
-    def _get_overlap(self, lines: List[str]) -> List[str]:
+    def _get_overlap(self, lines: list[str]) -> list[str]:
         """Get last few lines for overlap."""
         overlap_lines = []
         overlap_size = 0
@@ -133,7 +132,7 @@ class MarkdownChunker(Chunker):
         return overlap_lines
 
 
-def read_documents(path: str | Path) -> List[tuple[str, str]]:
+def read_documents(path: str | Path) -> list[tuple[str, str]]:
     """Read documents from a path (returns uri, content)."""
     path = Path(path)
     documents = []

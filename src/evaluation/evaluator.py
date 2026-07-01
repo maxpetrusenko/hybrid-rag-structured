@@ -1,27 +1,26 @@
 """Retrieval evaluation framework."""
 
 import json
-import asyncio
-from pathlib import Path
-from typing import List, Dict, Set, Literal
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Literal
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..storage.database import Database, get_db
-from ..storage.models import ChunkTable
 from ..ingestion.bm25_index import BM25Index
 from ..ingestion.embeddings import EmbeddingService
-from ..retrieval.hybrid import DenseRetriever, SparseRetriever, HybridRetriever, RetrievalConfig
-from .metrics import compute_metrics, EvaluationResult, AggregateMetrics
+from ..retrieval.hybrid import DenseRetriever, HybridRetriever, RetrievalConfig, SparseRetriever
+from ..storage.database import Database
+from ..storage.models import ChunkTable
+from .metrics import AggregateMetrics, EvaluationResult, compute_metrics
 
 
 @dataclass
 class Query:
     """A test query with relevant documents."""
     query: str
-    relevant_docs: Set[str]
+    relevant_docs: set[str]
     category: str
 
 
@@ -29,7 +28,7 @@ class Query:
 class MethodResult:
     """Results for a single retrieval method."""
     method: str
-    results: List[EvaluationResult]
+    results: list[EvaluationResult]
     aggregate: AggregateMetrics
 
 
@@ -48,9 +47,9 @@ class Evaluator:
 
     async def evaluate(
         self,
-        queries: List[Query],
-        methods: List[Literal["dense", "sparse", "hybrid"]] = ["dense", "sparse", "hybrid"],
-    ) -> List[MethodResult]:
+        queries: list[Query],
+        methods: list[Literal["dense", "sparse", "hybrid"]] = ["dense", "sparse", "hybrid"],
+    ) -> list[MethodResult]:
         """Evaluate all retrieval methods."""
         results = []
 
@@ -107,7 +106,7 @@ class Evaluator:
             **metrics,
         )
 
-    async def _chunks_to_docs(self, chunk_ids: List[str]) -> List[str]:
+    async def _chunks_to_docs(self, chunk_ids: list[str]) -> list[str]:
         """Map chunk IDs to source document names."""
         if not chunk_ids:
             return []
@@ -132,12 +131,12 @@ class Evaluator:
 
         return doc_names
 
-    async def _resolve_doc_names(self, doc_patterns: Set[str]) -> Set[str]:
+    async def _resolve_doc_names(self, doc_patterns: set[str]) -> set[str]:
         """Resolve document patterns to actual names."""
         # For now, assume patterns are exact filenames
         return doc_patterns
 
-    def _aggregate(self, results: List[EvaluationResult]) -> AggregateMetrics:
+    def _aggregate(self, results: list[EvaluationResult]) -> AggregateMetrics:
         """Aggregate metrics across all queries."""
         n = len(results)
         return AggregateMetrics(
@@ -154,7 +153,7 @@ class RetrievalEval:
     """High-level evaluation runner."""
 
     @staticmethod
-    def load_queries(path: str | Path) -> List[Query]:
+    def load_queries(path: str | Path) -> list[Query]:
         """Load queries from JSONL file."""
         queries = []
         with open(path) as f:
@@ -171,7 +170,7 @@ class RetrievalEval:
     async def run(
         queries_path: str | Path,
         output_path: str | Path | None = None,
-    ) -> List[MethodResult]:
+    ) -> list[MethodResult]:
         """Run full evaluation pipeline."""
         queries = RetrievalEval.load_queries(queries_path)
 
@@ -194,7 +193,7 @@ class RetrievalEval:
         return results
 
     @staticmethod
-    def save_results(results: List[MethodResult], path: str | Path) -> None:
+    def save_results(results: list[MethodResult], path: str | Path) -> None:
         """Save evaluation results to file."""
         output = []
 
@@ -227,7 +226,7 @@ class RetrievalEval:
                 f.write(json.dumps(item) + "\n")
 
     @staticmethod
-    def format_results(results: List[MethodResult]) -> str:
+    def format_results(results: list[MethodResult]) -> str:
         """Format results as markdown table."""
         lines = ["# Retrieval Evaluation Results\n"]
         lines.append("| Method | Recall@1 | Recall@5 | Recall@10 | MRR | nDCG@10 |")

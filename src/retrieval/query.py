@@ -1,12 +1,13 @@
 """Query CLI for hybrid retrieval."""
 
 import asyncio
+
 import click
 from dotenv import load_dotenv
 
-from ..storage.database import Database, get_db
 from ..ingestion.bm25_index import BM25Index
 from ..ingestion.embeddings import EmbeddingService
+from ..storage.database import Database
 from .hybrid import HybridRetriever, RetrievalConfig
 
 load_dotenv()

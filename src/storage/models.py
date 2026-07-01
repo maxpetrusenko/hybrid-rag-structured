@@ -1,15 +1,21 @@
 """Data models for documents and chunks."""
 
 from datetime import datetime
-from typing import Optional
+
+from pgvector.sqlalchemy import Vector
 from pydantic import BaseModel, Field
 from sqlalchemy import (
-    Column, String, Text, Float, DateTime, JSON, Integer, ForeignKey,
-    create_engine, Index
+    JSON,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from pgvector.sqlalchemy import Vector
 
 Base = declarative_base()
 
@@ -51,7 +57,7 @@ class Document(BaseModel):
     """Document model."""
     id: str
     source_uri: str
-    title: Optional[str] = None
+    title: str | None = None
     metadata: dict = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -62,7 +68,7 @@ class Chunk(BaseModel):
     document_id: str
     chunk_index: int
     content: str
-    embedding: Optional[list[float]] = None
+    embedding: list[float] | None = None
     metadata: dict = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 

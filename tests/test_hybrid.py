@@ -1,7 +1,6 @@
 """Tests for hybrid retrieval."""
 
-import pytest
-from src.retrieval.hybrid import RetrievalConfig, HybridRetriever, DenseRetriever
+from src.retrieval.hybrid import HybridRetriever, RetrievalConfig
 
 
 def test_retrieval_config_defaults():

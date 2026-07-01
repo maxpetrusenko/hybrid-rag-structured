@@ -2,6 +2,10 @@
 
 Hybrid retrieval system that indexes documents into Postgres/pgvector and Tantivy BM25, fuses dense plus sparse scores, and evaluates retrieval quality with Recall@K, MRR, and nDCG.
 
+![Hybrid RAG retrieval workflow](docs/assets/hybrid-rag-structured-workflow-poster.png)
+
+[Watch the 8-second workflow video](docs/assets/hybrid-rag-structured-workflow.mp4)
+
 ![Hybrid RAG retrieval pipeline and benchmark](docs/assets/retrieval-benchmark.svg)
 
 ## What This Proves

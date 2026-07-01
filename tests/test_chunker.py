@@ -1,7 +1,6 @@
 """Tests for text chunking."""
 
-import pytest
-from src.ingestion.chunker import TextChunker, MarkdownChunker
+from src.ingestion.chunker import MarkdownChunker, TextChunker
 
 
 def test_text_chunker_basic():
